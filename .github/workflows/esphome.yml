@@ -25,7 +25,7 @@ jobs:
       - name: Compile ESPHome
         run: esphome compile test.yaml
 
-      -       - name: Locate firmware
+      - name: Locate firmware
         run: find . -type f -name "*.bin" -print
 
       - name: Upload firmware
