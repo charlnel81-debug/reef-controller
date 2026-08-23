@@ -25,8 +25,15 @@ jobs:
       - name: Compile ESPHome
         run: esphome compile test.yaml
 
+      - name: Find firmware
+        run: |
+          echo "Searching for firmware..."
+          find .esphome -type f -name "*.bin" -print
+
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: reef-test-firmware
-          path: .esphome/build/reef-test/.pioenvs/reef-test/firmware.bin
+          path: |
+            .esphome/**/*.bin
+          if-no-files-found: error
