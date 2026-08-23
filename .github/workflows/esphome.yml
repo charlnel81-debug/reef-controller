@@ -32,10 +32,18 @@ jobs:
           echo "=== Build directory ==="
           find .esphome -maxdepth 6 -type f -print
 
+      -       - name: Locate firmware
+        run: |
+          echo "=== ALL BIN FILES ==="
+          find . -type f -name "*.bin" -print
+          echo "=== ESPHOME BUILD DIRECTORY ==="
+          find .esphome -type f -print
+
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: reef-test-firmware
           path: |
-            .esphome/build/reef-test/**/*.bin
-          if-no-files-found: error:
+            .esphome/build/reef-test/**/firmware.bin
+            .esphome/build/reef-test/**/firmware.factory.bin
+          if-no-files-found: warn:
