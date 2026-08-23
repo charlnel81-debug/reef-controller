@@ -1,4 +1,4 @@
-name: ESPHome Build
+:
 
 on:
   push:
@@ -27,15 +27,13 @@ jobs:
 
       - name: Find firmware
         run: |
-          echo "=== Searching for firmware files ==="
-          find . -type f \( -name "*.bin" -o -name "*.elf" \) -print
-          echo "=== Build directory ==="
-          find .esphome -maxdepth 6 -type f -print
+          echo "Searching for firmware..."
+          find .esphome -type f -name "*.bin" -print
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: reef-test-firmware
           path: |
-            .esphome/build/reef-test/**/*.bin
+            .esphome/**/*.bin
           if-no-files-found: error:
