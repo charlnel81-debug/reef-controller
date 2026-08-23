@@ -28,10 +28,8 @@ jobs:
       - name: Locate firmware
         run: find . -type f -name "*.bin" -print
 
-      - name: Upload firmware
+      - name: Upload firmware files
         uses: actions/upload-artifact@v4
         with:
           name: reef-test-firmware
-          path: |
-            .esphome/build/reef-test/build/reef-test.bin
-            .esphome/build/reef-test/build/firmware.factory.bin
+          path: .esphome/build/reef-test/build/*.bin
