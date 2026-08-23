@@ -25,18 +25,10 @@ jobs:
       - name: Compile ESPHome
         run: esphome compile test.yaml
 
-      - name: Locate firmware
-        run: find .esphome/build/reef-test/build -maxdepth 1 -type f -name "*.bin" -print
-
-      - name: Prepare firmware
-        run: |
-          mkdir -p firmware
-          cp .esphome/build/reef-test/build/reef-test.bin firmware/
-          cp .esphome/build/reef-test/build/firmware.factory.bin firmware/
-          ls -lh firmware/
-
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: reef-test-firmware
-          path: firmware/
+          path: |
+            .esphome/build/reef-test/build/firmware.factory.bin
+            .esphome/build/reef-test/build/reef-test.bin
