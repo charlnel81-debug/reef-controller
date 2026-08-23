@@ -1,0 +1,83 @@
+esphome:
+  name: reef-test
+  friendly_name: Reef Test
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: "YOUR_WIFI_NAME"
+  password: "YOUR_WIFI_PASSWORD"
+
+  ap:
+    ssid: "Reef-Test"
+    password: "12345678"
+
+captive_portal:
+
+globals:
+  - id: manual_off
+    type: bool
+    restore_value: no
+    initial_value: "false"
+
+switch:
+  - platform: gpio
+    id: relay1
+    name: "Return Pump"
+    pin:
+      number: GPIO4
+      inverted: false
+    restore_mode: ALWAYS_ON
+
+binary_sensor:
+  - platform: gpio
+    id: button1
+    name: "Return Pump Button"
+    pin:
+      number: GPIO10
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+
+    on_click:
+      - min_length: 0ms
+        max_length: 699ms
+        then:
+          - if:
+              condition:
+                lambda: "return id(manual_off) || !id(relay1).state;"
+              then:
+                - lambda: "id(manual_off) = false;"
+                - switch.turn_on: relay1
+              else:
+                - switch.turn_off: relay1
+                - delay: 10s
+                - if:
+                    condition:
+                      lambda: "return !id(manual_off);"
+                    then:
+                      - switch.turn_on: relay1
+
+      - min_length: 700ms
+        max_length: 10s
+        then:
+          - if:
+              condition:
+                lambda: "return id(manual_off) || !id(relay1).state;"
+              then:
+                - lambda: "id(manual_off) = false;"
+                - switch.turn_on: relay1
+              else:
+                - lambda: "id(manual_off) = true;"
+                - switch.turn_off: relay1
